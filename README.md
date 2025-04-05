@@ -3,6 +3,8 @@ Project Description
 MindSnap is a simple wellness-focused application designed to reduce doom-scrolling and promote mindful breaks. The app encourages users to log mindful moments and set intentional time-limited social media goals. Users can create, read, update, and delete both mindful activities and social usage goals.
 
 Team Members
+
+
 UGR/9380/15 
 foyat Getachew 
 https://github.com/foyattt  
@@ -12,6 +14,10 @@ https://github.com/Yonas143
 Yonathan Desalegn 
 Ugr/4871/15 
 https://github.com/yonathani
+
+
+
+
 🚀 Features
 Mindful Activities (CRUD)
 Users can create and track mindfulness exercises like journaling, meditating, stretching, etc.
@@ -31,7 +37,7 @@ Includes widget tests, unit tests, and integration tests for both frontend and b
 💡 Tech Stack
 Frontend: Flutter
 
-Backend: Node.js / Express (or Django/FastAPI depending on your preference)
+Backend: Node.js / Express
 
 Database: SQLite / PostgreSQL (locally hosted)
 
