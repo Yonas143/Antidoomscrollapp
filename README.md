@@ -18,15 +18,19 @@ https://github.com/yonathani
 
 
 
-🚀 Features
+Features
+
 Mindful Activities (CRUD)
 Users can create and track mindfulness exercises like journaling, meditating, stretching, etc.
+
 
 Social Media Goals (CRUD)
 Users set goals to limit time spent on specific social media platforms.
 
+
 Authentication & Authorization
 Users can register, log in, and manage their sessions securely. Access control ensures users only manage their own content.
+
 
 Local REST API
 The backend is a RESTful API running locally that serves both services and handles auth.
@@ -34,7 +38,8 @@ The backend is a RESTful API running locally that serves both services and handl
 Testing
 Includes widget tests, unit tests, and integration tests for both frontend and backend.
 
-💡 Tech Stack
+
+Tech Stack
 Frontend: Flutter
 
 Backend: Node.js / Express
