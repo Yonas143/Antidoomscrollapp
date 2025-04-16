@@ -48,3 +48,13 @@ Database: SQLite / PostgreSQL (locally hosted)
 
 
 
+Feature | Implementation | Covered? x
+
+
+
+User Registration | /api/auth/register | ✅
+User Login | /api/auth/login | ✅
+JWT Token Generation | On successful login | ✅
+Token Verification | authMiddleware.js | ✅
+Protected Routes | All CRUD routes use auth middleware | ✅
+Resource Ownership Check | Only allows access to own data | ✅
