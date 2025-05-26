@@ -1,16 +1,64 @@
 # mindsnap
 
-A new Flutter project.
+Floder structure 
 
-## Getting Started
+lib/
+├── main.dart
+├── core/
+│   ├── constants.dart
+│   ├── providers.dart
+│   └── router.dart
+├── features/
+│   ├── auth/
+│   │   ├── data/
+│   │   │   └── auth_repository.dart
+│   │   ├── logic/
+│   │   │   ├── auth_controller.dart
+│   │   │   └── auth_state.dart
+│   │   └── presentation/
+│   │       ├── login_page.dart
+│   │       └── register_page.dart
+│   ├── dashboard/
+│   │   └── presentation/
+│   │       ├── admin_dashboard.dart
+│   │       └── user_dashboard.dart
+│   ├── mindful_activities/
+│   │   ├── data/
+│   │   │   └── activity_repository.dart
+│   │   ├── logic/
+│   │   │   └── activity_controller.dart
+│   │   └── presentation/
+│   │       ├── activity_form.dart
+│   │       └── activity_list.dart
+│   ├── goals/
+│   │   ├── data/
+│   │   │   └── goal_repository.dart
+│   │   ├── logic/
+│   │   │   └── goal_controller.dart
+│   │   └── presentation/
+│   │       ├── goal_form.dart
+│   │       └── goal_list.dart
+│   └── admin/
+│       ├── data/
+│       │   └── user_repository.dart
+│       ├── logic/
+│       │   └── user_controller.dart
+│       └── presentation/
+│           └── user_list.dart
+└── widgets/
+├── custom_button.dart
+├── custom_textfield.dart
+└── navbar.dart
 
-This project is a starting point for a Flutter application.
+pubspec.yaml
+- Includes dependencies for flutter_riverpod, dio, go_router, and flutter_hooks
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+test/
+├── unit/
+│   ├── auth_test.dart
+│   ├── activity_test.dart
+│   └── goal_test.dart
+├── widget/
+│   └── login_widget_test.dart
+└── integration/
+└── app_flow_test.dart
