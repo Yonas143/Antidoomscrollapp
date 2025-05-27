@@ -12,13 +12,17 @@ class UserDashboard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('User Dashboard')),
       body: SingleChildScrollView(
-        child: Column(
+        child: // Inside the UserDashboard widget's body:
+        Column(
           children: const [
             ActivityForm(),
-            Divider(),
             ActivityList(),
+            Divider(),
+            GoalForm(),
+            GoalList(),
           ],
-        ),
+        )
+        ,
       ),
     );
   }
