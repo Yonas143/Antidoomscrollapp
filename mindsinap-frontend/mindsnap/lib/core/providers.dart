@@ -1,21 +1,25 @@
-// lib/core/providers.dart
-
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../features/auth/data/auth_repository.dart';
-import '../features/auth/logic/auth_controller.dart';
+import 'package:mindsnap/features/auth/logic/auth_controller.dart';
+import 'package:mindsnap/features/mindful_activities/data/activity_repository.dart';
+import 'package:mindsnap/features/goals/data/goal_repository.dart';
+import 'package:mindsnap/features/admin/data/user_repository.dart';
 
-final dioProvider = Provider<Dio>((ref) {
-  return Dio(BaseOptions(baseUrl: 'http://localhost:3000')); // Adjust as needed
-});
+// AUTH
+final authStateProvider = StateNotifierProvider<AuthController, AuthState>(
+      (ref) => AuthController(ref),
+);
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final dio = ref.watch(dioProvider);
-  return AuthRepository(dio);
-});
+// MINDFUL ACTIVITIES
+final activityRepoProvider = Provider<ActivityRepository>(
+      (ref) => ActivityRepository(),
+);
 
-final authControllerProvider =
-StateNotifierProvider<AuthController, AuthState>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  return AuthController(repo);
-});
+// GOALS
+final goalRepoProvider = Provider<GoalRepository>(
+      (ref) => GoalRepository(),
+);
+
+// USERS (Admin)
+final userRepoProvider = Provider<UserRepository>(
+      (ref) => UserRepository(),
+);
