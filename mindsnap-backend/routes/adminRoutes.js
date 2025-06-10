@@ -1,10 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
-const { verifyToken, requireAdmin } = require('../middleware/authMiddleware');
+const { protect } = require('../middlewares/authMiddleware');
+const User = require('../models/User');
 
-router.get('/users', verifyToken, requireAdmin, adminController.getAllUsers);
-router.delete('/users/:id', verifyToken, requireAdmin, adminController.deleteUser);
-router.put('/users/:id/role', verifyToken, requireAdmin, adminController.updateUserRole);
+router.use(protect);
+
+router.get('/users', async (req, res) => {
+    if (!req.user.isAdmin) return res.status(403).json({ message: 'Access denied' });
+    const users = await User.find().select('-password');
+    res.json(users);
+});
 
 module.exports = router;
