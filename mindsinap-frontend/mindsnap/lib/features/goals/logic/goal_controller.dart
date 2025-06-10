@@ -1,26 +1,24 @@
 // lib/features/goals/logic/goal_controller.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/providers.dart';
 import '../data/goal_repository.dart';
+import '../../../models/goal.dart';
 
-final goalControllerProvider = StateNotifierProvider<GoalController, AsyncValue<List<Map<String, dynamic>>>>((ref) {
-  final repo = ref.read(goalRepoProvider);
-  return GoalController(repo);
-});
 
-class GoalController extends StateNotifier<AsyncValue<List<Map<String, dynamic>>>> {
+class GoalController extends StateNotifier<List<Goal>> {
   final GoalRepository repo;
 
-  GoalController(this.repo) : super(const AsyncValue.loading()) {
+  GoalController(this.repo) : super(const AsyncValue.loading() as List<Goal>) {
     loadGoals();
   }
 
   Future<void> loadGoals() async {
     try {
       final data = await repo.getGoals();
-      state = AsyncValue.data(data);
+      state = AsyncValue.data(data) as List<Goal>;
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      state = AsyncValue.error(e, st) as List<Goal>;
     }
   }
 
@@ -29,7 +27,7 @@ class GoalController extends StateNotifier<AsyncValue<List<Map<String, dynamic>>
       await repo.createGoal(platform, dailyLimit);
       await loadGoals();
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      state = AsyncValue.error(e, st) as List<Goal>;
     }
   }
 
@@ -38,7 +36,7 @@ class GoalController extends StateNotifier<AsyncValue<List<Map<String, dynamic>>
       await repo.deleteGoal(id);
       await loadGoals();
     } catch (e, st) {
-      state = AsyncValue.error(e, st);
+      state = AsyncValue.error(e, st) as List<Goal>;
     }
   }
 }

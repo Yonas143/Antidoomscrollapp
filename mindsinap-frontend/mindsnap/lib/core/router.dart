@@ -1,19 +1,32 @@
+// lib/core/router.dart
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mindsnap/core/providers.dart'; // For auth state if needed
 
-// Pages
+// Auth Pages
 import 'package:mindsnap/features/auth/presentation/login_page.dart';
 import 'package:mindsnap/features/auth/presentation/register_page.dart';
+
+// Dashboards
 import 'package:mindsnap/features/dashboard/presentation/user_dashboard.dart';
 import 'package:mindsnap/features/dashboard/presentation/admin_dashboard.dart';
-import 'package:mindsnap/features/mindful_activities/presentation/activity_list.dart';
-import 'package:mindsnap/features/mindful_activities/presentation/activity_form.dart';
-import 'package:mindsnap/features/goals/presentation/goal_list.dart';
-import 'package:mindsnap/features/goals/presentation/goal_form.dart';
-import 'package:mindsnap/features/admin/presentation/user_list.dart';
 
-// Widgets
+// Mindful Activities
+import 'package:mindsnap/features/mindful_activities/presentation/activity_list_page.dart';
+import 'package:mindsnap/features/mindful_activities/presentation/activity_form_page.dart';
+
+// Goals
+import 'package:mindsnap/features/goals/presentation/goal_list_page.dart';
+import 'package:mindsnap/features/goals/presentation/goal_form_page.dart';
+
+// Admin - Users
+import 'package:mindsnap/features/admin/presentation/user_list_page.dart';
+
+// Shared Widgets
 import 'package:mindsnap/widgets/navbar.dart';
+
+import '../features/auth/presentation/user_list_page.dart';
 
 final router = GoRouter(
   initialLocation: '/',
@@ -61,7 +74,7 @@ final router = GoRouter(
   ],
 );
 
-/// Landing Page (Welcome screen)
+/// Landing Page (Welcome Page)
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
 

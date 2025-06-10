@@ -1,26 +1,43 @@
-// lib/features/mindful_activities/data/activity_repository.dart
-
 import 'package:dio/dio.dart';
-import '../../../core/constants.dart';
+import '../../../models/activity.dart';
 
 class ActivityRepository {
-  final Dio dio;
+  final Dio _dio;
 
-  ActivityRepository(this.dio);
+  ActivityRepository(this._dio);
 
-  Future<void> createActivity(String title, String description) async {
-    await dio.post(
-      '$baseUrl/api/mindful-activities',
-      data: {'title': title, 'description': description},
+  /// GET all activities for the current user
+  Future<List<Activity>> getAllActivities() async {
+    final response = await _dio.get('/api/mindful-activities');
+
+    if (response.statusCode == 200) {
+      final data = response.data as List;
+      return data.map((json) => Activity.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load activities');
+    }
+  }
+
+  /// POST a new activity
+  Future<Activity> createActivity(Activity activity) async {
+    final response = await _dio.post(
+      '/api/mindful-activities',
+      data: activity.toJson(),
     );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return Activity.fromJson(response.data);
+    } else {
+      throw Exception('Failed to create activity');
+    }
   }
 
-  Future<List<Map<String, dynamic>>> getUserActivities() async {
-    final response = await dio.get('$baseUrl/api/mindful-activities');
-    return List<Map<String, dynamic>>.from(response.data);
-  }
-
+  /// DELETE an activity by ID
   Future<void> deleteActivity(String id) async {
-    await dio.delete('$baseUrl/api/mindful-activities/$id');
+    final response = await _dio.delete('/api/mindful-activities/$id');
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete activity');
+    }
   }
 }

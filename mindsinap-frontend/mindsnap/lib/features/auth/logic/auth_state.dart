@@ -1,27 +1,29 @@
 // lib/features/auth/logic/auth_state.dart
 
 class AuthState {
-  final bool isLoading;
   final String? token;
+  final bool isLoading;
   final String? error;
 
-  AuthState({
-    required this.isLoading,
+  const AuthState({
     this.token,
+    this.isLoading = false,
     this.error,
   });
 
-  factory AuthState.initial() => AuthState(isLoading: false);
+  factory AuthState.initial() {
+    return const AuthState(token: null, isLoading: false, error: null);
+  }
 
   AuthState copyWith({
-    bool? isLoading,
     String? token,
+    bool? isLoading,
     String? error,
   }) {
     return AuthState(
-      isLoading: isLoading ?? this.isLoading,
       token: token ?? this.token,
-      error: error,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
     );
   }
 }

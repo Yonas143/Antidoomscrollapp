@@ -1,6 +1,8 @@
 // lib/features/dashboard/presentation/user_dashboard.dart
 
 import 'package:flutter/material.dart';
+import '../../goals/presentation/goal_form.dart';
+import '../../goals/presentation/goal_list.dart';
 import '../../mindful_activities/presentation/activity_form.dart';
 import '../../mindful_activities/presentation/activity_list.dart';
 
