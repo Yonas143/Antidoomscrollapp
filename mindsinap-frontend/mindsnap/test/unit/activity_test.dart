@@ -1,123 +1,143 @@
-// test/features/auth/presentation/login_page_test.dart
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart'; // Or Mockito
-import 'package:mindsnap/features/auth/logic/auth_controller.dart'; // Your AuthController
-import 'package:mindsnap/features/auth/logic/auth_state.dart'; // Your AuthState
-import 'package:mindsnap/features/auth/presentation/login_page.dart';
-import 'package:mindsnap/core/providers.dart'; // Your authControllerProvider
+import 'package:mockito/mockito.dart';
 
-// --- Mock AuthController ---
-class MockAuthController extends StateNotifier<AuthState>
-    with Mock
-    implements AuthControllerNotifier {
-  // `AuthControllerNotifier` would be an interface your AuthController implements,
-  // or you directly mock AuthController if its methods are easily mockable.
-  // For simplicity, let's assume it has a simple login method.
+// --- Hypothetical Activity Model and Service (replace with your actual paths) ---
+// You would typically have these in your lib folder, e.g.,
+// import 'package:antidoomscrollapp/models/activity.dart';
+// import 'package:antidoomscrollapp/services/activity_service.dart';
 
-  MockAuthController(super.state); // Initial state for the mock
+// Placeholder for your Activity model
+class Activity {
+  String id;
+  String name;
+  String description;
+  DateTime date;
+  bool isCompleted;
 
-// This is a simplified mock. You might need to mock the actual login method
-// and control its behavior if AuthControllerNotifier is more complex.
-// If your AuthController has a login method like:
-// Future<void> login(String email, String password) async { ... }
-// You would mock that using Mocktail/Mockito's `when(...).thenAnswer(...)`
-}
-
-// Helper to create a ProviderScope with overrides for testing
-Widget createLoginPageScreen({
-  required AuthControllerNotifier authController, // Use the interface or the concrete class
-  // required StateNotifierProvider<AuthControllerNotifier, AuthState> authProviderOverride,
-}) {
-  return ProviderScope(
-    overrides: [
-      // This assumes authControllerProvider is StateNotifierProvider<AuthControllerNotifier, AuthState>
-      // Adjust if your provider definition is different.
-      authControllerProvider.overrideWithValue(
-          authController as AuthController),
-      // If authControllerProvider is StateNotifierProvider<AuthController, AuthState>
-      // and MockAuthController is AuthController, then it's fine.
-    ],
-    child: const MaterialApp( // MaterialApp needed for navigation context, themes, etc.
-      home: LoginPage(),
-    ),
-  );
-}
-
-
-void main() {
-  late MockAuthController mockAuthController;
-
-  setUp(() {
-    // Setup mock with an initial state before each test
-    mockAuthController = MockAuthController(AuthState.initial());
+  Activity({
+    required this.id,
+    required this.name,
+    this.description = '',
+    required this.date,
+    this.isCompleted = false,
   });
 
-  group('LoginPage Widget Tests', () {
-    testWidgets(
-        'renders initial UI elements correctly', (WidgetTester tester) async {
-      await tester.pumpWidget(
-          createLoginPageScreen(authController: mockAuthController));
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Activity &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          description == other.description &&
+          date == other.date &&
+          isCompleted == other.isCompleted;
 
-      expect(find.widgetWithText(TextFormField, 'Username or Email'),
-          findsOneWidget);
-      expect(find.widgetWithText(TextFormField, 'Password'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Login'), findsOneWidget);
-      expect(
-          find.widgetWithText(TextButton, 'Don\'t have an account? Register'),
-          findsOneWidget);
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      description.hashCode ^
+      date.hashCode ^
+      isCompleted.hashCode;
+}
+
+// Placeholder for your ActivityService abstract class or interface
+abstract class ActivityService {
+  Future<Activity> createActivity(Activity activity);
+  Future<Activity?> getActivity(String id);
+  Future<List<Activity>> getAllActivities();
+  Future<Activity> updateActivity(Activity activity);
+  Future<void> deleteActivity(String id);
+}
+// --- End of Hypothetical Activity Model and Service ---
+
+// Create a mock class for ActivityService using Mockito
+class MockActivityService extends Mock implements ActivityService {}
+
+void main() {
+  group('ActivityService Unit Tests', () {
+    late MockActivityService mockActivityService;
+
+    setUp(() {
+      mockActivityService = MockActivityService();
     });
 
-    testWidgets('shows loading indicator when AuthState is loading', (
-        WidgetTester tester) async {
-      // Arrange: Update the mock controller's state to be loading
-      mockAuthController.state = AuthState.initial().copyWith(isLoading: true);
+    test('createActivity successfully adds a new activity', () async {
+      final newActivity = Activity(
+        id: '1',
+        name: 'Morning Run',
+        date: DateTime.now(),
+      );
+      when(mockActivityService.createActivity(newActivity))
+          .thenAnswer((_) async => newActivity);
 
-      await tester.pumpWidget(
-          createLoginPageScreen(authController: mockAuthController));
-
-      // Assert
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Login'),
-          findsNothing); // Button might be hidden or replaced
+      final result = await mockActivityService.createActivity(newActivity);
+      expect(result, newActivity);
+      verify(mockActivityService.createActivity(newActivity)).called(1);
     });
 
-    testWidgets(
-        'tapping login button calls AuthController.login when form is valid', (
-        WidgetTester tester) async {
-      // For this, you'd need to properly mock the login method on MockAuthController
-      // For example, if AuthControllerNotifier has:
-      // Future<void> login(String email, String password);
-      //
-      // You would use Mocktail:
-      // when(() => mockAuthController.login(any(), any())).thenAnswer((_) async {});
+    test('getActivity returns an activity if found', () async {
+      final existingActivity = Activity(
+        id: '2',
+        name: 'Read Book',
+        date: DateTime(2023, 10, 26),
+      );
+      when(mockActivityService.getActivity('2'))
+          .thenAnswer((_) async => existingActivity);
 
-      await tester.pumpWidget(
-          createLoginPageScreen(authController: mockAuthController));
-
-      // Act
-      await tester.enterText(
-          find.widgetWithText(TextFormField, 'Username or Email'),
-          'test@example.com');
-      await tester.enterText(
-          find.widgetWithText(TextFormField, 'Password'), 'password123');
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
-      await tester.pump();
-
-      // Assert
-      // verify(() => mockAuthController.login('test@example.com', 'password123')).called(1);
-      // This assertion requires Mocktail setup and proper mocking of the login method.
-      // For now, this is a placeholder for the concept.
-      // A simpler test might be to check if the state tried to become "loading"
-      // if your mock isn't sophisticated.
-      print(
-          "INFO: Test for 'calls AuthController.login' needs proper mocking of the login method in MockAuthController.");
+      final result = await mockActivityService.getActivity('2');
+      expect(result, existingActivity);
+      verify(mockActivityService.getActivity('2')).called(1);
     });
 
-    // Add more tests:
-    // - Form validation messages showing
-    // - Tapping register button (if it uses context.push, that's harder to unit test here, better for integration)
-    // - SnackBar display on error (this can be tricky in widget tests, might need a way to mock ScaffoldMessenger)
+    test('getActivity returns null if activity not found', () async {
+      when(mockActivityService.getActivity('999')).thenAnswer((_) async => null);
+
+      final result = await mockActivityService.getActivity('999');
+      expect(result, isNull);
+      verify(mockActivityService.getActivity('999')).called(1);
+    });
+
+    test('getAllActivities returns a list of activities', () async {
+      final activities = [
+        Activity(id: '1', name: 'Activity A', date: DateTime.now()),
+        Activity(id: '2', name: 'Activity B', date: DateTime.now()),
+      ];
+      when(mockActivityService.getAllActivities()).thenAnswer((_) async => activities);
+
+      final result = await mockActivityService.getAllActivities();
+      expect(result, activities);
+      expect(result.length, 2);
+      verify(mockActivityService.getAllActivities()).called(1);
+    });
+
+    test('updateActivity successfully modifies an existing activity', () async {
+      final originalActivity = Activity(
+        id: '3',
+        name: 'Work Project',
+        date: DateTime(2023, 11, 1),
+        isCompleted: false,
+      );
+      final updatedActivity = Activity(
+        id: '3',
+        name: 'Work Project',
+        date: DateTime(2023, 11, 1),
+        isCompleted: true,
+      );
+      when(mockActivityService.updateActivity(updatedActivity))
+          .thenAnswer((_) async => updatedActivity);
+
+      final result = await mockActivityService.updateActivity(updatedActivity);
+      expect(result, updatedActivity);
+      verify(mockActivityService.updateActivity(updatedActivity)).called(1);
+    });
+
+    test('deleteActivity successfully removes an activity', () async {
+      when(mockActivityService.deleteActivity('4')).thenAnswer((_) async => Future.value());
+
+      await mockActivityService.deleteActivity('4');
+      verify(mockActivityService.deleteActivity('4')).called(1);
+    });
   });
 }
