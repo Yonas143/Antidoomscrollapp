@@ -12,6 +12,9 @@ import '../features/mindful_activities/data/activity_repository.dart';
 import '../features/mindful_activities/logic/activity_controller.dart';
 import '../features/admin/data/user_repository.dart';
 import '../features/admin/logic/user_controller.dart';
+import '../features/auth/data/auth_repository.dart'; // Make sure this path is correct
+import '../features/auth/logic/auth_controller.dart';
+import '../features/auth/logic/auth_state.dart';
 
 /// External
 final dioProvider = Provider<Dio>((ref) => Dio());
@@ -46,11 +49,10 @@ final goalRepoProvider = Provider<GoalRepository>((ref) {
 });
 
 // Specify concrete state type
-final goalControllerProvider = StateNotifierProvider<GoalController, List<Goal>>((ref) {
-  final repo = ref.read(goalRepoProvider);
+final goalControllerProvider = StateNotifierProvider<GoalController, AsyncValue<List<Goal>>>((ref) {
+  final repo = ref.watch(goalRepoProvider); // Watch your repository provider
   return GoalController(repo);
 });
-
 /// Admin - Users
 final userRepoProvider = Provider<UserRepository>((ref) {
   final dio = ref.read(dioProvider);
